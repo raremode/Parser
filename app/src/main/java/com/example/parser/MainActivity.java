@@ -2,6 +2,7 @@ package com.example.parser;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,12 +27,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public ArrayList<Double> Price;
     public ListView listview;
     public Button get;
     public View view;
-    public JSONArray array;
-    public ArrayList<JSONObject> list;
     public JSONObject file, file2;
     dadabase_work Dadabase_work;
 
@@ -43,13 +41,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
         listview=findViewById(R.id.cryptolist);
         get=findViewById(R.id.get_JSON);
         JSON_Load(url);
         Dadabase_work = new dadabase_work(this);
     }
-   // public void action(View view){getJSON(array);}
 
     public void JSON_Load(String url){
         request = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -59,11 +57,6 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             file2 = response.getJSONObject("data");
                             file = file2.getJSONObject("market_cap_percentage");
-                           // for(int i=0; i< names.length; i++){
-                          //      Double v=file.getDouble(names[i]);
-                          //      Log.w(names[i], " equals " + v);
-                         //   }
-                         //   Write_DB(view);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -75,14 +68,9 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    public void return_DB(){
-        JSON_Load(url);
-
-    }
     public void Write_DB(View view) {
         JSON_Load(url);
         Dadabase_work.cleaner();
-
         try {
             for (int i = 0; i < names.length; i++) {
                 String request = names[i];
