@@ -1,25 +1,23 @@
 package com.example.parser;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         setContentView(R.layout.activity_main);
         listview=findViewById(R.id.cryptolist);
         get=findViewById(R.id.get_JSON);
@@ -63,7 +64,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error){} });
+            public void onErrorResponse(VolleyError error){
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Resource is not founded", Toast.LENGTH_SHORT);
+                toast.show();
+            } });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(request);
     }
@@ -76,13 +81,17 @@ public class MainActivity extends AppCompatActivity {
                 String request = names[i];
                 Double q=file.getDouble(request);
                 String price=q.toString();
-                Log.w("start_list", request + " " + price);
                 Dadabase_work.inserts(request, price);
             }
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Successful parsing!", Toast.LENGTH_SHORT);
+            toast.show();
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    public void show(View view){
         ArrayList<String> result = Dadabase_work.read_DB();
         ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, result);
         listview.setAdapter(adapter);

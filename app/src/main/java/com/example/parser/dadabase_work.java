@@ -14,8 +14,6 @@ private ContentValues cv;
 private SQLiteDatabase db;
 
 private Integer index, index2;
-private Integer count=0;
-
 public Cursor cursor,  cursor2;
 
 public dadabase_work(Context context){
